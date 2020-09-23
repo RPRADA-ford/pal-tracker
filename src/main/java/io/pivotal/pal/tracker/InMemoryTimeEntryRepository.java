@@ -5,7 +5,7 @@ import java.util.List;
 
 public class InMemoryTimeEntryRepository implements TimeEntryRepository{
 
-    private HashMap <Long, TimeEntry> Repository = new HashMap<> ();
+    private final HashMap <Long, TimeEntry> Repository = new HashMap<> ();
     private Long id = (long) 0;
 
     @Override
@@ -26,22 +26,29 @@ public class InMemoryTimeEntryRepository implements TimeEntryRepository{
         return List.copyOf(Repository.values());
     }
 
+
     @Override
     public TimeEntry update(long id, TimeEntry timeEntry) {
         TimeEntry timeRecord = find(id);
-            if (!(timeRecord == null))
-            {
-                timeRecord.setProjectId(timeEntry.getProjectId());
-                timeRecord.setUserId(timeEntry.getUserId());
-                timeRecord.setDate(timeEntry.getDate());
-                timeRecord.setHours(timeEntry.getHours());
 
-                return create(timeRecord);
-            }
-            else
-                return timeRecord;
+        if (!(timeRecord == null)) {
+
+            timeRecord.setProjectId(timeEntry.getProjectId());
+            timeRecord.setUserId(timeEntry.getUserId());
+            timeRecord.setDate(timeEntry.getDate());
+            timeRecord.setHours(timeEntry.getHours());
+
+            Repository.put(id, timeRecord);
+
+        }
+        return timeRecord;
 
     }
+
+
+
+
+
 
     @Override
     public void delete(long id) {
